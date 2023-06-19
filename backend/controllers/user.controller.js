@@ -9,6 +9,8 @@ cloudinary.config({
   api_secret: 'HXNACy-i7whD2FohG3D5t8FZRYM'
 });
 
+
+
 module.exports.register = async (req, res) => {
   try {
     const result = await cloudinary.uploader.upload(req.file.path, {
@@ -244,3 +246,13 @@ exports.getUsers = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getUserInfoS = async (req, res) => {
+try {
+  const {id} = req.params;
+  const user = await userdb.findById(id);
+  res.status(200).json(user)
+} catch (error) {
+  res.status(404).json({message: error.message});
+}
+}

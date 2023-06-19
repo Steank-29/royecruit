@@ -128,6 +128,8 @@ export default function LInterview() {
     }
   }, [token]);
 
+  const [cID, setCID] = useState('')
+
 
   useEffect(() => {
     fetch('http://localhost:5000/royecruit/getquestions')
@@ -135,6 +137,7 @@ export default function LInterview() {
       .then(data => {
         setQuestions(data);
         setEvalId(data.map(item => item._id));
+        localStorage.setItem('companyId', data.map(item => item.companyId))
         setEvalDuration(data.map(item => parseInt(item.duration, 10)));
         setEvalname(data.map(item => item.evalname));
         setEvalquestions(data.map(item => item.questions));
@@ -200,7 +203,7 @@ export default function LInterview() {
         setEvaluationStatus(status);
 
         if (status === 'Taken') {
-          alert("You've Already Took This Evaluation please For The Respond From The Company");
+          alert("You've Already Took This Evaluation.");
           setDialogOpen(false);
         } else {
             setDialogOpen(true);
@@ -313,6 +316,19 @@ export default function LInterview() {
   }, [showText]);
 
 
+  const [companyInfo, setCompanyInfo] = useState(null)
+  const companyIdL = localStorage.getItem('companyId')
+
+  useEffect(() => {
+  
+  axios.get(`http://localhost:5000/royecruit/companyinfo/${companyIdL}`)
+    .then(response => {
+      setCompanyInfo(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }, [companyIdL]);
 
 
 
@@ -325,6 +341,8 @@ export default function LInterview() {
           }} className={`text ${showText ? 'visible' : ''}`} >
             Existing <Span>Evaluations </Span> For The Moment
           </Pretext>
+
+        
       
 
       {questions.map((question, index) => (
@@ -334,6 +352,9 @@ export default function LInterview() {
       <CardContent>
         <Typography gutterBottom>
         <Typography sx={{fontFamily:"Oswald", fontSize:13, color:"black", fontWeight:"bold", textTransform:"uppercase"}}>created By <span style={{fontSize:16}}><b>{question.companyname}</b></span></Typography>
+        </Typography>
+        <Typography gutterBottom>
+        <Typography sx={{fontFamily:"Oswald", fontSize:13, color:"black", fontWeight:"bold", textTransform:"uppercase"}}>Domain: <span style={{fontSize:16}}><b><u>{companyInfo.industry}</u></b></span></Typography>
         </Typography>
         <Typography variant="h5" component="div">
         <Typography sx={{fontFamily:"Oswald", fontSize:21, fontWeight:"bold", textAlign:"center", textTransform:"uppercase"}}> {question.evalname} <u>Evaluation</u></Typography>

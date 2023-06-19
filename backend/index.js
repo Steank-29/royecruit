@@ -7,7 +7,11 @@ const app = express()
 const path = require('path');
 
 
+
 const userRoutes = require('./routes/user.router')
+const examRoutes = require('./routes/test.router')
+const userexamRoutes = require('./routes/userExam.router')
+const examQuestionRoutes = require('./routes/testQuestion.router')
 
 
 app.use( express.json() )
@@ -21,6 +25,9 @@ app.get('/' , (req , res ) => {
 app.use('/royecruit/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/royecruit' , userRoutes)
+app.use('/exam' , examRoutes)
+app.use('/examquestions' , examQuestionRoutes)
+app.use('/userexams' , userexamRoutes)
 
 
 

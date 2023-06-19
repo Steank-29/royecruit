@@ -32,7 +32,20 @@ import JobOffer from './components/company/JobOffer';
 import LInterview from './components/Log/LInterview';
 import Offers from './components/Log/Offers';
 import CompanyProfile from './components/company/CompanyProfile';
-import Dashboard from './components/company/Dashboard';
+import Dashboard1 from './components/company/Dashboard1';
+import Error from './components/company/Error';
+import UserAnswer from './components/company/UserAnswer';
+import Resume from './components/Log/Resume';
+
+import QuizController from "./components/company/QuizController";
+import Result from "./components/quizHandler/Result";
+import TestQCM from './components/company/TestQCM';
+import ExamReview from './components/company/ExamReview';
+import Anlyze from './components/company/Anlyze';
+import Reports from './components/company/Reports';
+import CreateQuiz from './components/company/CreateQuiz';
+import UpdateTest from './components/company/UpdateTest';
+
 
 
 
@@ -180,11 +193,53 @@ function App() {
     }, 
     {
       path : '/companydashboard',
-      element :CisAuth ? <CompanyLayout> <Dashboard/> </CompanyLayout>  : <Navigate to='/' replace/>
-      },  
+      element :CisAuth ? <CompanyLayout> <Dashboard1/> </CompanyLayout>  : <Navigate to='/' replace/>
+    },     
+    {
+      path:"/userAnswer/:id",
+      element:CisAuth ? <CompanyLayout>  <UserAnswer/> </CompanyLayout>  : <Navigate to='/' replace/>
+    },
+    {
+      path : '/testqcm/:id',
+      element :CisAuth ? <CompanyLayout> <TestQCM/> </CompanyLayout>  : <Navigate to='/' replace/>
+      }, 
+  {
+    path : '/create/:examId/:userId',
+    element :CisAuth ? <CompanyLayout> <CreateQuiz/> </CompanyLayout>  : <Navigate to='/' replace/>
+  },
+  {
+    path : '/examreview/:examId',
+    element :CisAuth ? <CompanyLayout> <ExamReview/> </CompanyLayout>  : <Navigate to='/' replace/>
+  },
+  {
+    path : '/anlyze/:examId',
+    element :CisAuth ? <CompanyLayout> <Anlyze/> </CompanyLayout>  : <Navigate to='/' replace/>
+  },
+  {
+    path : '/updatest/:examId/:userId',
+    element :CisAuth ? <CompanyLayout> <UpdateTest/> </CompanyLayout>  : <Navigate to='/' replace/>
+  }, 
+  {
+    path : '/reports/:userId',
+    element : isAuth ? <Loginlayout> <Reports/> </Loginlayout> : <Navigate to='/' replace/>
+    },
+    {
+      path : '/quiz/:examId/:userId',
+      element : isAuth ? <Loginlayout> <QuizController/> </Loginlayout> : <Navigate to='/' replace/>
+      }, 
+      {
+        path : '/result/:examId/:userId',
+        element : isAuth ? <Loginlayout> <Result/> </Loginlayout> : <Navigate to='/' replace/>
+        },
+
+    {
+      path:'/resume',
+      element:isAuth ? <Loginlayout> <Resume/> </Loginlayout> : <Navigate to='/' replace/>
+    },
+
     {
       path : '*',
-      element : <div>ERROR 404</div>
+      element : <Error/>
     }
   ])
 

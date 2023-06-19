@@ -273,11 +273,11 @@ function CompanyNavbar() {
                     fontFamily: "Oswald",
                     fontWeight: "bolder"
                 }} /> 
-                <Tab label="Dashboard"   sx={{ marginTop: "8px", marginLeft: "20px" , '&:hover': { color: "#000"}}}/>
-                <Tab label="Upload Job Offer" href="/job" sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
+                <Tab label="Dashboard" href="/companydashboard"   sx={{ marginTop: "8px", marginLeft: "20px" , '&:hover': { color: "#000"}}}/>
+                <Tab label="Job Offer" href="/job" sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
                 <Tab label="Evaluation" href="/evaluation" sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
-                
-                <Tab label="Contact Royecruit" href="/royecruit" sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
+                <Tab label="Generate Test" href={`/testqcm/${userId}`} sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
+                <Tab label="Contact" href="/royecruit" sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
                 <Tab label={
           <div onClick={handleClickpop}>
             <StyledBadge badgeContent={userCount} color="secondary">

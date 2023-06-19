@@ -43,9 +43,14 @@ router.get('/offers', companyController.getOffers)
 router.put('/company/:id/image', upload.single('image'), companyController.updateCompanyImage);
 router.put('/updatepasswordC/:id', companyController.updatePasswordCompany);
 router.post('/usertookeval', companyController.Usertookeval)
-
-
 router.post('/getcompanyEvalAnswer', companyController.companyEvalAnswer)
+router.post('/getcompanyEvalUser', companyController.companyEvalUser)
+router.post('/send-email-delay/:id', companyController.sendEmailDelay);
+router.post('/send-email-acceptance/:id', companyController.sendEmailAcceptance);
+router.post('/send-email-rejection/:id', companyController.sendEmailRejection);
+router.get('/companyinfoos/:id', companyController.companyinfoos)
+
+router.post('/upload', upload.single('file'), companyController.uploadFile)
 
 //WEBSITE CLIENT/USER
 router.post('/registeruser' , upload.single('image') , userController.register );
@@ -61,9 +66,7 @@ router.get('/getUser/:id', userController.getUser)
 
 router.delete('/deleteEval/:id', companyController.deleteEval)
 
-
-
-
+router.get('/users/stage/:id', userController.getUserInfoS)
 
 
 

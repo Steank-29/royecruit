@@ -469,25 +469,38 @@ exports.updateCompanyinfo = async (req, res) => {
 
 
 exports.companyEvalAnswer = async (req, res) => {
-  const { evalId , userId  } = req.body;
+  const { id  } = req.body;
   try {
 
-    const user = await UserAnswer.findOne({ evalId : evalId });
+    const user = await UserAnswer.findOne({ evalId : id });
     if (!user) {
       return res.status(401).json({ message: 'Invalid evaluation id' });
     }
 
-    const user1 = await userdb.findOne({ _id : userId });
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid evaluation id' });
-    }
-
-    res.status(200).json( {user, user1} );
+    res.status(200).json( user );
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
     console.error(error);
   }
 };
+
+
+exports.companyEvalUser = async (req, res) => {
+  const { userId  } = req.body;
+  try {
+
+    const user = await userdb.findOne({ _id : userId });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid user id' });
+    }
+
+    res.status(200).json( user );
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+    console.error(error);
+  }
+};
+
 
 
  exports.Usertookeval = async (req, res) => {
@@ -522,3 +535,238 @@ exports.deleteEval = async (req, res) => {
     console.error(error);
   }
 };
+
+
+exports.sendEmailDelay = async (req, res) => {
+
+  const {mailed , fullname } = req.body;
+  const {id} =req.params
+
+  const transporter = nodemailer.createTransport({
+
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL,
+      pass: process.env.PASS,
+    },
+  });
+
+  try {
+
+    const company = await Company.findById(id);
+
+    const currentDate = new Date().toLocaleDateString();
+
+    await transporter.sendMail({
+      from: company.email,
+      to: mailed,
+      subject: `A Delay Letter From ${company.companyname}`, 
+      html: `<img src="${company.image}" style={{width:"30px", height:"30px", borderRadius:"50%"}} alt="Company Logo">
+      <br/>
+      <br/><span style={{fontWeight:"bold", fontSize:22, textTransform:"uppercase"}}>${company.companyname}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>${company.companyaddress} ${company.selectedState}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>${company.location}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>${currentDate}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Dear ${fullname}</span>
+      <br/>
+      <br/> Thank you for taking the time to complete our online evaluation. We appreciate your interest and enthusiasm in joining our organization.
+      <br/>
+      <br/> We would like to inform you that we are currently in the process of reviewing all applications and evaluating candidates. Due to the high volume of applications we have received, this process is taking longer than anticipated. We understand the importance of providing timely updates and appreciate your patience during this time.
+      <br/>
+      <br/>Rest assured that we are carefully assessing each application and evaluating candidates based on our requirements. We value your interest in ${company.companyname} and assure you that we will contact you as soon as possible with further updates regarding the status of your application.
+      <br/>
+      <br/>Once again, thank you for your understanding and patience. We look forward to being in touch with you soon.
+      <br/>
+      <br/>Best regards,
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Sami Jelassi</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Human Resource Manager</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", fontSize:22 textTransform:"uppercase"}}>${company.companyname}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Samijelassi2909@gmail.com</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>+21628728170</span>
+      <br/>`,
+    });
+
+    res.status(200).json({ message: 'Email sent successfully' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ message: 'Error sending email' });
+  }
+};
+
+
+exports.sendEmailAcceptance = async (req, res) => {
+
+  const {mailed , fullname } = req.body;
+  const {id} =req.params
+
+  const transporter = nodemailer.createTransport({
+
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL,
+      pass: process.env.PASS,
+    },
+  });
+
+  try {
+
+    const company = await Company.findById(id);
+
+    const currentDate = new Date().toLocaleDateString();
+
+    const currentDateL = new Date();
+
+    const futureDate = new Date();
+    futureDate.setDate(currentDateL.getDate() + 10);
+
+    const formattedFutureDate = futureDate.toLocaleDateString();
+
+    await transporter.sendMail({
+      from: company.email,
+      to: mailed,
+      subject: `An Acceptance Letter From ${company.companyname}`, 
+      html: `<img src="${company.image}" style={{width:"30px", height:"30px", borderRadius:"50%"}} alt="Company Logo">
+      <br/>
+      <br/><span style={{fontWeight:"bold", fontSize:22, textTransform:"uppercase"}}>${company.companyname}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>${company.companyaddress} ${company.selectedState}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>${company.location}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>${currentDate}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Dear ${fullname}</span>
+      <br/>
+      <br/> Congratulations!
+      <br/>
+      <br/> We are delighted to inform you that you have successfully passed our online evaluation. We were impressed by your skills, qualifications, and performance throughout the assessment process.
+      <br/>
+      <br/> We believe that your expertise and experience will be a valuable addition to our team. Your enthusiasm for the role was evident, and we are excited to offer you the opportunity to join us. We are confident that your contributions will greatly contribute to our ongoing success.
+      <br/>
+      <br/>Please find attached the official offer letter, which includes details regarding your compensation, benefits, start date, and other relevant information. Take your time to review the offer carefully and let us know of your decision by ${formattedFutureDate}. Should you have any questions or require further clarification, please do not hesitate to contact us.
+      <br/>
+      <br/>We look forward to welcoming you to our organization and embarking on a mutually rewarding journey together.
+      <br/>
+      <br/>Best regards,
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Sami Jelassi</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Human Resource Manager</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", fontSize:22 textTransform:"uppercase"}}>${company.companyname}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Samijelassi2909@gmail.com</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>+21628728170</span>
+      <br/>`,
+    });
+
+    res.status(200).json({ message: 'Email sent successfully' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ message: 'Error sending email' });
+  }
+};
+
+
+exports.sendEmailRejection = async (req, res) => {
+
+  const {mailed , fullname } = req.body;
+  const {id} =req.params
+
+  const transporter = nodemailer.createTransport({
+
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL,
+      pass: process.env.PASS,
+    },
+  });
+
+  try {
+
+    const company = await Company.findById(id);
+
+    const currentDate = new Date().toLocaleDateString();
+
+    await transporter.sendMail({
+      from: company.email,
+      to: mailed,
+      subject: `A Rejection Letter From ${company.companyname}`, 
+      html: `<img src="${company.image}" style={{width:"30px", height:"30px", borderRadius:"50%"}} alt="Company Logo">
+      <br/>
+      <br/><span style={{fontWeight:"bold", fontSize:22, textTransform:"uppercase"}}>${company.companyname}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>${company.companyaddress} ${company.selectedState}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>${company.location}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>${currentDate}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Dear ${fullname}</span>
+      <br/>
+      <br/>We appreciate the time and effort you put into completing our online evaluation . We carefully reviewed your performance and qualifications in relation to our requirements and regret to inform you that we have decided not to move forward with your application at this time.
+      <br/>
+      <br/>Please note that the decision was based on a thorough assessment of various factors, including the specific needs of the role and the overall fit within our team. While your application was strong, we had to make difficult choices, and unfortunately, we are unable to offer you the position.
+      <br/>
+      <br/>We want to assure you that this decision does not diminish your accomplishments or abilities. We encourage you to continue pursuing your career aspirations and exploring opportunities that align with your skills and interests. Your dedication and effort are commendable, and we wish you the very best in your future endeavors.
+      <br/>
+      <br/>Thank you again for your interest in [Company Name]. We appreciate the opportunity to get to know you, and we encourage you to consider applying for other positions that may arise in the future. We will retain your application in our database and reach out should any suitable openings arise.
+      <br/>
+      <br/>Wishing you success in your professional journey.
+      <br/>
+      <br/>Sincerely,
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Sami Jelassi</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Human Resource Manager</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", fontSize:22 textTransform:"uppercase"}}>${company.companyname}</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>Samijelassi2909@gmail.com</span>
+      <br/>
+      <br/><span style={{fontWeight:"bold", textTransform:"uppercase"}}>+21628728170</span>
+      <br/>`,
+    });
+
+    res.status(200).json({ message: 'Email sent successfully' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ message: 'Error sending email' });
+  }
+};
+
+
+exports.uploadFile = (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file provided' });
+  }
+
+  return res.status(200).json({ message: 'File uploaded successfully' });
+};
+
+
+exports.companyinfoos = async (req, res) => {
+  try {
+    const {id} = req.params
+    const company = await Company.findById(id)
+
+    if(!company) {
+      return res.status(404).json({error: 'Company not found'})
+    }
+    res.json({companyname: company.companyname})
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({error: 'Internel server error'})
+  }
+}

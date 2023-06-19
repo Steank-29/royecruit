@@ -219,6 +219,7 @@ function Lognavbar() {
                 <Tab label="Home"  href="/lmain" sx={{ marginTop: "8px", marginLeft: "20px" , '&:hover': { color: "#000"}}}/>
                 <Tab label="Offers" href="/jobOffers" sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
                 <Tab label="Interview" href="/linterview" sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
+                <Tab label="Test"  href={`/reports/${userId}`} sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
                 <Tab label="About" href="/labout" sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
                 <Tab label="Service" href="/lservice" sx={{ marginTop: "8px" , '&:hover': { color: "#000"}}}/>
 
